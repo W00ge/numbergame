@@ -1,0 +1,71 @@
+<head title="Joe's Number Game"></head>
+<body onLoad="goJoe()">
+<script type="text/javascript">
+
+var onclick = function(event)
+{
+	alert("you " + event.type +"ed OMG!!!" + "x:" + event.pageX + " y:" + event.pageY);
+}
+
+var onresize = function(event)
+{
+	console.log("event was " + event.type);
+	drawIt();
+}
+
+var goJoe = function()
+{
+	var a = document.getElementById ("JoeCanvas");
+	a.addEventListener("click",onclick);
+	a.addEventListener("resize",onresize);
+	drawIt();
+}
+
+var drawIt = function()
+{
+	var a = document.getElementById ("JoeCanvas");
+	var b = a.getContext("2d");
+	var winWidth = window.innerWidth;
+	var winHeight = window.innerHeight;
+	console.log("width " + winWidth + " height " + winHeight);
+	a.width = winWidth;
+	a.height = winHeight;
+	b.fillStyle = "#99f35c";	
+	b.font = "72px Blackadder";
+	b.fillText ("Hello world!",200,50);
+	var numButtonsAcross = 6;
+	var sideMargins = 10;
+	var spaceBetween = 10;
+	var size = (winWidth - (2 * sideMargins) - (spaceBetween * (numButtonsAcross - 1))) / numButtonsAcross;
+	var distance = size + spaceBetween;
+	var ButtonNum = 0;
+	while(ButtonNum < 6)
+	{
+		b.fillRect(ButtonNum * distance + sideMargins,500,size,size);
+		ButtonNum ++;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+<canvas id = "JoeCanvas" width = "1000px" height = "1000px"></canvas>
