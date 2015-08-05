@@ -18,6 +18,7 @@ var goJoe = function()
 	var a = document.getElementById ("JoeCanvas");
 	a.addEventListener("click",onclick);
 	a.addEventListener("resize",onresize);
+	globNums = pickNumbers(6)
 	drawIt();
 }
 
@@ -30,42 +31,52 @@ var drawIt = function()
 	console.log("width " + winWidth + " height " + winHeight);
 	a.width = winWidth;
 	a.height = winHeight;
-	b.fillStyle = "#99f35c";	
-	b.font = "72px Blackadder";
-	b.fillText ("Hello world!",200,50);
+	// b.fillStyle = "#99f35c";	
+	// b.font = "72px Blackadder";
+	// b.fillText ("Hello world!",200,50);
 	var numButtonsAcross = 6;
 	var sideMargins = 10;
 	var spaceBetween = 10;
 	var size = (winWidth - (2 * sideMargins) - (spaceBetween * (numButtonsAcross - 1))) / numButtonsAcross;
 	var distance = size + spaceBetween;
+	var buttonTopLine = 500;
+	var buttonTopLineText = buttonTopLine + size / 2;
+	// Draw the buttons
 	var ButtonNum = 0;
 	while(ButtonNum < 6)
 	{
-		b.fillRect(ButtonNum * distance + sideMargins,500,size,size);
+		b.fillStyle = "#99f35c";
+		b.fillRect(ButtonNum * distance + sideMargins,buttonTopLine,size,size);
+		b.fillStyle = "#000000";
+		b.font = "72px Blackadder";
+		var n = ButtonNum * distance + sideMargins + size / 2;
+		b.textAlign = "center";
+		b.textBaseline = "middle";
+		b.fillText (globNums.parts[ButtonNum],n,buttonTopLineText);	
+
+		
+
 		ButtonNum ++;
 	}
 }
 
+var pickNumbers = function(numNumbers)
+{
+	var Nums = [];
+	Nums.push(Math.floor(Math.random() * 4 + 1) * 25);
+	for (var i = 0; i < numNumbers - 1; i++)
+	{
+		Nums.push(Math.floor(Math.random() * 10 + 1));
+	}
 
+	var targetNumber = 
+	{
+		parts: Nums,
+		number: (Math.floor(Math.random() * 999 + 1))
+	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	return targetNumber; 
+}
 
 </script>
 <canvas id = "JoeCanvas" width = "1000px" height = "1000px"></canvas>
