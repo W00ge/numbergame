@@ -4,7 +4,17 @@
 
 var onclick = function(event)
 {
-	alert("you " + event.type +"ed OMG!!!" + "x:" + event.pageX + " y:" + event.pageY);
+
+	var mouseX = event.pageX;
+	var mouseY = event.pageY;
+	for(var i = 0; i < globButtons.buttonPositions.length;i++)
+	{
+		butPos = globButtons.buttonPositions[i];
+		if(mouseX < butPos.x + butPos.width && mouseY < butPos.y + butPos.height && mouseX > butPos.x && mouseY > butPos.y)	
+		{
+				alert("you " + event.type +"ed OMG!!!" + "x:" + event.pageX + " y:" + event.pageY + " button " + (i + 1));
+		}
+	}
 }
 
 var onresize = function(event)
@@ -18,7 +28,7 @@ var goJoe = function()
 	var a = document.getElementById ("JoeCanvas");
 	a.addEventListener("click",onclick);
 	a.addEventListener("resize",onresize);
-	globNums = pickNumbers(6)
+	globButtons = pickNumbers(6)
 	drawIt();
 }
 
@@ -39,10 +49,11 @@ var drawIt = function()
 	var spaceBetween = 10;
 	var size = (winWidth - (2 * sideMargins) - (spaceBetween * (numButtonsAcross - 1))) / numButtonsAcross;
 	var distance = size + spaceBetween;
-	var buttonTopLine = 500;
+	var buttonTopLine = winHeight / 16 * 13;
 	var buttonTopLineText = buttonTopLine + size / 2;
 	// Draw the buttons
 	var ButtonNum = 0;
+	var ButtonPos = [];
 	while(ButtonNum < 6)
 	{
 		b.fillStyle = "#99f35c";
@@ -52,12 +63,20 @@ var drawIt = function()
 		var n = ButtonNum * distance + sideMargins + size / 2;
 		b.textAlign = "center";
 		b.textBaseline = "middle";
-		b.fillText (globNums.parts[ButtonNum],n,buttonTopLineText);	
+		b.fillText (globButtons.parts[ButtonNum],n,buttonTopLineText);	
 
-		
+		ButtonPos.push (
+		{
+			x: ButtonNum * distance + sideMargins,
+			y: buttonTopLine,
+			width: size,
+			height: size,
+		}
+		)
 
 		ButtonNum ++;
 	}
+	globButtons.buttonPositions = ButtonPos
 }
 
 var pickNumbers = function(numNumbers)
