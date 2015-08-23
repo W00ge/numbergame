@@ -2,24 +2,23 @@
 <body onLoad="goJoe()">
 <script type="text/javascript">
 
-var onclick = function(event)
+var onclick = function(ev)
 {
-
-	var mouseX = event.pageX;
-	var mouseY = event.pageY;
+	var mouseX = ev.pageX;
+	var mouseY = ev.pageY;
 	for(var i = 0; i < globButtons.buttonPositions.length;i++)
 	{
 		butPos = globButtons.buttonPositions[i];
 		if(mouseX < butPos.x + butPos.width && mouseY < butPos.y + butPos.height && mouseX > butPos.x && mouseY > butPos.y)	
 		{
-				alert("you " + event.type +"ed OMG!!!" + "x:" + event.pageX + " y:" + event.pageY + " button " + (i + 1));
+				alert("you " + ev.type +"ed OMG!!!" + "x:" + ev.pageX + " y:" + ev.pageY + " value " + butPos.value);
 		}
 	}
 }
 
-var onresize = function(event)
+var onresize = function(ev)
 {
-	console.log("event was " + event.type);
+	console.log("event was " + ev.type);
 	drawIt();
 }
 
@@ -41,36 +40,55 @@ var drawIt = function()
 	console.log("width " + winWidth + " height " + winHeight);
 	a.width = winWidth;
 	a.height = winHeight;
-	// b.fillStyle = "#99f35c";	
-	// b.font = "72px Blackadder";
-	// b.fillText ("Hello world!",200,50);
 	var numButtonsAcross = 6;
 	var sideMargins = 10;
 	var spaceBetween = 10;
 	var size = (winWidth - (2 * sideMargins) - (spaceBetween * (numButtonsAcross - 1))) / numButtonsAcross;
 	var distance = size + spaceBetween;
-	var buttonTopLine = winHeight / 16 * 13;
+	var buttonBottomLine = winHeight / 16 * 13;
+	var buttonTopLine = buttonBottomLine - size - 20;
+	var buttonBottomLineText = buttonBottomLine + size / 2;
 	var buttonTopLineText = buttonTopLine + size / 2;
 	// Draw the buttons
 	var ButtonNum = 0;
 	var ButtonPos = [];
 	while(ButtonNum < 6)
 	{
-		b.fillStyle = "#99f35c";
+		b.fillStyle = "#ff0000";
 		b.fillRect(ButtonNum * distance + sideMargins,buttonTopLine,size,size);
-		b.fillStyle = "#000000";
+		b.fillStyle = "#000000"
 		b.font = "72px Blackadder";
 		var n = ButtonNum * distance + sideMargins + size / 2;
 		b.textAlign = "center";
 		b.textBaseline = "middle";
-		b.fillText (globButtons.parts[ButtonNum],n,buttonTopLineText);	
-
+		b.fillText (globButtons.operators[ButtonNum],n,buttonTopLineText);
 		ButtonPos.push (
 		{
 			x: ButtonNum * distance + sideMargins,
 			y: buttonTopLine,
 			width: size,
 			height: size,
+			value: globButtons.operators[ButtonNum]
+		}
+		)
+
+		b.fillStyle = "#99f35c"
+		b.fillRect(ButtonNum * distance + sideMargins,buttonBottomLine,size,size);
+		b.fillStyle = "#000000";
+		b.font = "72px Blackadder";
+		n = ButtonNum * distance + sideMargins + size / 2;
+		b.textAlign = "center";
+		b.textBaseline = "middle";
+		b.fillText (globButtons.parts[ButtonNum],n,buttonBottomLineText);	
+
+		ButtonPos.push (
+		{
+			x: ButtonNum * distance + sideMargins,
+			y: buttonBottomLine,
+			width: size,
+			height: size,
+			value: globButtons.parts[ButtonNum]
+
 		}
 		)
 
@@ -91,6 +109,7 @@ var pickNumbers = function(numNumbers)
 	var targetNumber = 
 	{
 		parts: Nums,
+		operators: [ "+", "-", "*", "/", "?", "<-"],
 		number: (Math.floor(Math.random() * 999 + 1))
 	}
 
