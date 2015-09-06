@@ -2,16 +2,27 @@
 <body onLoad="goJoe()">
 <script type="text/javascript">
 
-var onclick = function(ev)
+var buttonpressed = function(ev)
 {
+	console.log("onclick")
 	var mouseX = ev.pageX;
 	var mouseY = ev.pageY;
 	for(var i = 0; i < globButtons.buttonPositions.length;i++)
 	{
-		butPos = globButtons.buttonPositions[i];
+		var butPos = globButtons.buttonPositions[i];
 		if(mouseX < butPos.x + butPos.width && mouseY < butPos.y + butPos.height && mouseX > butPos.x && mouseY > butPos.y)	
 		{
-				alert("you " + ev.type +"ed OMG!!!" + "x:" + ev.pageX + " y:" + ev.pageY + " value " + butPos.value);
+			// if globSteps array is empty OR the last element in the array is complete
+			// {			
+			// }
+				//alert(butPos.value);
+				if(!isNaN(butPos.value))
+				{
+					var step = {val1: butPos.value};
+					globSteps.push(step);
+
+				}
+				drawIt();
 		}
 	}
 }
@@ -25,9 +36,10 @@ var onresize = function(ev)
 var goJoe = function()
 {
 	var a = document.getElementById ("JoeCanvas");
-	a.addEventListener("click",onclick);
+	a.addEventListener("click",buttonpressed);
 	a.addEventListener("resize",onresize);
 	globButtons = pickNumbers(6)
+	globSteps = []
 	drawIt();
 }
 
@@ -49,6 +61,13 @@ var drawIt = function()
 	var buttonTopLine = buttonBottomLine - size - 20;
 	var buttonBottomLineText = buttonBottomLine + size / 2;
 	var buttonTopLineText = buttonTopLine + size / 2;
+	b.fillStyle = "#ff0000";
+	b.font = "36px Ariel";
+	console.log(globSteps);
+	for(var j = 0;j < globSteps.length; j++)
+	{
+		b.fillText(globSteps[j].val1,100 + j * 60,100)
+	}
 	// Draw the buttons
 	var ButtonNum = 0;
 	var ButtonPos = [];
