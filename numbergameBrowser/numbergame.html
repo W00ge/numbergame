@@ -1,7 +1,30 @@
+
 <head title="Joe's Number Game"></head>
 <body onLoad="goJoe()">
 <script type="text/javascript">
 
+var isAnOperator = function(buttonValue) 
+{
+
+	return buttonValue === "+" 
+	|| buttonValue === "-" 
+	|| buttonValue === "*" 
+	|| buttonValue === "/" 
+}
+
+var globAnswers = []
+
+var checkTarget = function()
+{
+	if(globAnswers.length != 0 && globButtons.number === globAnswers[globAnswers.length - 1])
+	{
+		var a = document.getElementById ("JoeCanvas");
+		var b = a.getContext("2d");
+		b.fillStyle = "#3ef4bf"
+		b.font = "100px Ariel"
+		b.fillText("YOU WIN",250,500)
+	}
+}
 var buttonpressed = function(ev)
 {
 	console.log("onclick")
@@ -13,26 +36,47 @@ var buttonpressed = function(ev)
 		if(mouseX < butPos.x + butPos.width && mouseY < butPos.y + butPos.height && mouseX > butPos.x && mouseY > butPos.y)	
 		{
 			// if globSteps array is empty OR the last element in the array is complete
-			// {			
-			// }
 				//alert(butPos.value);
 				if(!isNaN(butPos.value))
 				{
-					var step = {val1: butPos.value};
-					globSteps.push(step);
-
+					// If the button is a number do the following ...
+					if(globSteps.length % 2 === 0)
+					{
+						var step = butPos.value;
+						globSteps.push(step);
+					}
+				}
+				else if(isAnOperator(butPos.value))
+				{
+					// If the button is an operator (+ - / *) do the following...
+					if(globSteps.length % 4 === 1)
+					{
+						var step = butPos.value;
+						globSteps.push(step);
+					}
+				}
+				else if(butPos.value === "=")
+				{
+					// If the button is an =
+					if(globSteps.length % 4 === 3)
+					{
+						var step = butPos.value;
+						globSteps.push(step);
+					}
+				}
+				else if (butPos.value === "<-") 
+				{
+					globSteps.pop()
 				}
 				drawIt();
 		}
 	}
 }
-
 var onresize = function(ev)
 {
 	console.log("event was " + ev.type);
 	drawIt();
 }
-
 var goJoe = function()
 {
 	var a = document.getElementById ("JoeCanvas");
@@ -42,6 +86,19 @@ var goJoe = function()
 	globSteps = []
 	drawIt();
 }
+
+
+
+
+
+
+
+// change background flash if needed
+
+
+
+
+
 
 var drawIt = function()
 {
@@ -53,30 +110,66 @@ var drawIt = function()
 	a.width = winWidth;
 	a.height = winHeight;
 	var numButtonsAcross = 6;
-	var sideMargins = 10;
+	var MaxWinWidth = winWidth
+	if(MaxWinWidth >= 500)
+	{
+		MaxWinWidth = 500;
+	}
+	var sideMargins = 20;
 	var spaceBetween = 10;
-	var size = (winWidth - (2 * sideMargins) - (spaceBetween * (numButtonsAcross - 1))) / numButtonsAcross;
+	var size = (MaxWinWidth - (2 * sideMargins) - (spaceBetween * (numButtonsAcross - 1))) / numButtonsAcross;
 	var distance = size + spaceBetween;
-	var buttonBottomLine = winHeight / 16 * 13;
+	var buttonBottomLine = winHeight / 16 * 13; 
 	var buttonTopLine = buttonBottomLine - size - 20;
 	var buttonBottomLineText = buttonBottomLine + size / 2;
 	var buttonTopLineText = buttonTopLine + size / 2;
+	b.fillStyle  = "#000000"
+	b.fillRect(0,0,winWidth,winHeight)
+	b.fillStyle = "#7f9ab4"
+	b.font = "96px Ariel";
+	b.fillText(globButtons.number,100,100);
 	b.fillStyle = "#ff0000";
 	b.font = "36px Ariel";
 	console.log(globSteps);
+	var newLine = 160;
+	var xPos = 30;
+	var ButtonPos = [];
 	for(var j = 0;j < globSteps.length; j++)
 	{
-		b.fillText(globSteps[j].val1,100 + j * 60,100)
+		b.fillText(globSteps[j],xPos,newLine)
+		xPos += 90;
+		if(globSteps[j] === "=")
+		{
+			var num1 = globSteps [j - 3];
+			var op1 = globSteps [j - 2];
+			var num2 = globSteps [j - 1];
+			var expression = num1 + op1 + num2;
+			console.log(expression);
+			var answer = eval(expression)
+			b.fillText(answer,xPos,newLine)
+			
+
+			globAnswers.push(answer)
+			ButtonPos.push (
+			{
+				x: xPos,
+				y: newLine - 20,
+				width: 60,
+				height: 55,
+				value: answer 
+			}
+			)
+			xPos = 30;
+			newLine = newLine + 60;
+		}
 	}
-	// Draw the buttons
 	var ButtonNum = 0;
-	var ButtonPos = [];
 	while(ButtonNum < 6)
 	{
 		b.fillStyle = "#ff0000";
 		b.fillRect(ButtonNum * distance + sideMargins,buttonTopLine,size,size);
 		b.fillStyle = "#000000"
-		b.font = "72px Blackadder";
+		b.font = "50px Blackadder";
 		var n = ButtonNum * distance + sideMargins + size / 2;
 		b.textAlign = "center";
 		b.textBaseline = "middle";
@@ -90,16 +183,14 @@ var drawIt = function()
 			value: globButtons.operators[ButtonNum]
 		}
 		)
-
 		b.fillStyle = "#99f35c"
 		b.fillRect(ButtonNum * distance + sideMargins,buttonBottomLine,size,size);
 		b.fillStyle = "#000000";
-		b.font = "72px Blackadder";
+		b.font = "50px Blackadder";
 		n = ButtonNum * distance + sideMargins + size / 2;
 		b.textAlign = "center";
 		b.textBaseline = "middle";
 		b.fillText (globButtons.parts[ButtonNum],n,buttonBottomLineText);	
-
 		ButtonPos.push (
 		{
 			x: ButtonNum * distance + sideMargins,
@@ -107,15 +198,14 @@ var drawIt = function()
 			width: size,
 			height: size,
 			value: globButtons.parts[ButtonNum]
-
 		}
 		)
-
 		ButtonNum ++;
 	}
 	globButtons.buttonPositions = ButtonPos
-}
 
+	checkTarget();
+}
 var pickNumbers = function(numNumbers)
 {
 	var Nums = [];
@@ -124,16 +214,14 @@ var pickNumbers = function(numNumbers)
 	{
 		Nums.push(Math.floor(Math.random() * 10 + 1));
 	}
-
 	var targetNumber = 
 	{
 		parts: Nums,
-		operators: [ "+", "-", "*", "/", "?", "<-"],
+		operators: [ "+", "-", "*", "/", "=", "<-"],
 		number: (Math.floor(Math.random() * 999 + 1))
 	}
-
 	return targetNumber; 
 }
-
 </script>
 <canvas id = "JoeCanvas" width = "1000px" height = "1000px"></canvas>
+</body>

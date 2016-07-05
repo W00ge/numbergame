@@ -1,0 +1,10 @@
+we need:
+new lines
+target number - make it so that if you get that number you win
+clickable numbers
+undo button
+
+glitches:
+target number might not be achieveable(maybe)
+
+
